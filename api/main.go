@@ -1,14 +1,18 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"flag"
+
+	"webxam/config"
+	"webxam/database"
+	"webxam/server"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/", func(c *gin.Context) {
-		c.String(200, "hello world")
-	})
+	e := flag.String("e", "development", "環境変数の設定オプション")
+	flag.Parse()
 
-	router.Run(":80")
+	config.Init(*e)
+	database.Init()
+	server.Init()
 }
