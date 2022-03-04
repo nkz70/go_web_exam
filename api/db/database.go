@@ -1,4 +1,4 @@
-package database
+package db
 
 import (
 	"fmt"
@@ -41,6 +41,7 @@ func Init() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	log.Println("database connect succeed")
 }
 
