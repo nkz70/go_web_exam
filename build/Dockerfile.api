@@ -3,7 +3,7 @@ FROM golang:1.17.7-alpine3.15
 ARG path=/go/src/
 
 WORKDIR $path
-RUN apk update && apk add git
+RUN apk update && apk add git tzdata
 COPY ./api/go.sum ./api/go.mod ./api/air.conf $path
 RUN go get -u github.com/cosmtrek/air
 

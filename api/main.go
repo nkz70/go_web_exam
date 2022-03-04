@@ -4,7 +4,7 @@ import (
 	"flag"
 
 	"webxam/config"
-	"webxam/database"
+	"webxam/db"
 	"webxam/server"
 )
 
@@ -13,6 +13,6 @@ func main() {
 	flag.Parse()
 
 	config.Init(*e)
-	database.Init()
+	db.Init()
 	server.Init()
 }

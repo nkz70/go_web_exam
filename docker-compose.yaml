@@ -21,6 +21,7 @@ services:
       - DB_USER_NAME=postgres
       - DB_PASSWORD=postgres
       - DB_NAME=web_exam
+      - TZ=Asia/Tokyo
     ports:
       - 8080:80
     volumes:
