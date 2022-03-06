@@ -11,7 +11,8 @@ type UserRequest struct {
 }
 
 type UserController interface {
-	FindUser(ur *UserRequest) (*[]model.User, error)
+	FetchUserList(ur *UserRequest) (*[]model.User, error)
+	FindUser(id int64) (*model.User, error)
 }
 
 type userController struct {
@@ -24,14 +25,22 @@ func NewUserController(ur repository.UserRepository) UserController {
 	}
 }
 
-func (uc *userController) FindUser(ur *UserRequest) (*[]model.User, error) {
-	// nur := validate(ur)
-	users, err := uc.UserRepository.Find()
+func (uc *userController) FetchUserList(ur *UserRequest) (*[]model.User, error) {
+	users, err := uc.UserRepository.FetchList()
 	if err != nil {
 		return nil, err
 	}
 
 	return users, nil
+}
+
+func (uc *userController) FindUser(id int64) (*model.User, error) {
+	user, err := uc.UserRepository.Find(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 // func validate(ur UserRequest) {

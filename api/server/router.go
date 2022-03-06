@@ -22,7 +22,8 @@ func NewRouter() *gin.Engine {
 
 	v := router.Group(c.GetString("server.version"))
 	{
-		v.GET("/users", un.FindUser)
+		v.GET("/users", un.FetchUserList)
+		v.GET("/user/:id", un.FindUser)
 	}
 
 	return router
