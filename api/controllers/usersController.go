@@ -13,6 +13,7 @@ type UserRequest struct {
 type UserController interface {
 	FetchUserList(ur *UserRequest) (*[]model.User, error)
 	FindUser(id int64) (*model.User, error)
+	DeleteUser(id int64) error
 }
 
 type userController struct {
@@ -41,6 +42,14 @@ func (uc *userController) FindUser(id int64) (*model.User, error) {
 	}
 
 	return user, nil
+}
+
+func (uc *userController) DeleteUser(id int64) error {
+	if err := uc.UserRepository.Delete(id); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // func validate(ur UserRequest) {

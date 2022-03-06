@@ -13,6 +13,7 @@ import (
 type UserHandler interface {
 	FetchUserList(c *gin.Context)
 	FindUser(c *gin.Context)
+	DeleteUser(c *gin.Context)
 }
 
 type userHandler struct {
@@ -52,4 +53,20 @@ func (uh *userHandler) FindUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, users)
+}
+
+func (uh *userHandler) DeleteUser(c *gin.Context) {
+	sid := c.Param("id")
+	id, err := strconv.ParseInt(sid, 10, 64)
+	if err != nil {
+
+	}
+
+	if err := uh.UserController.DeleteUser(id); err != nil {
+
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": http.StatusOK,
+	})
 }

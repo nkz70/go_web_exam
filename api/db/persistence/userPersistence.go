@@ -39,6 +39,16 @@ func (up *userPersistence) Find(id int64) (*model.User, error) {
 	return &user, nil
 }
 
+func (up *userPersistence) Delete(id int64) error {
+	var user model.User
+
+	if err := up.con.Delete(&user, id).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (up *userPersistence) createDBClient(fc *model.FindClause) *gorm.DB {
 	w := up.con.Order("id desc")
 	w = w.Limit(fc.Limit)
