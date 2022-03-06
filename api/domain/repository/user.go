@@ -1,7 +1,10 @@
 package repository
 
-import "webxam/domain/model"
+import (
+	"webxam/domain/model"
+)
 
 type UserRepository interface {
-	Find() (*[]model.User, error)
+	FetchList() (*[]model.User, error)
+	Find(id int64) (*model.User, error)
 }

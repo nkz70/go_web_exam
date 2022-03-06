@@ -7,11 +7,6 @@ import (
 	"webxam/domain/repository"
 )
 
-type WhereClause struct {
-	LastName  string
-	FirstName string
-}
-
 type userPersistence struct {
 	con *gorm.DB
 }
@@ -20,17 +15,34 @@ func NewUserPersistence(con *gorm.DB) repository.UserRepository {
 	return &userPersistence{con}
 }
 
-func (up *userPersistence) Find() (*[]model.User, error) {
+func (up *userPersistence) FetchList() (*[]model.User, error) {
 	var users []model.User
 
-	w := up.con.Order("id desc")
-	w = w.Limit(20)
-	wc := WhereClause{FirstName: "", LastName: ""}
-	w = w.Where(&wc)
+	c := up.con
 
-	if err := w.Find(&users).Error; err != nil {
+	// c := up.createDBClient(fc)
+
+	if err := c.Find(&users).Error; err != nil {
 		return nil, err
 	}
 
 	return &users, nil
+}
+
+func (up *userPersistence) Find(id int64) (*model.User, error) {
+	var user model.User
+
+	if err := up.con.First(&user, id).Error; err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (up *userPersistence) createDBClient(fc *model.FindClause) *gorm.DB {
+	w := up.con.Order("id desc")
+	w = w.Limit(fc.Limit)
+	w = w.Where(fc)
+
+	return w
 }
