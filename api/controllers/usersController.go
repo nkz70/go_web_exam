@@ -3,16 +3,21 @@ package controllers
 import (
 	"webxam/domain/model"
 	"webxam/domain/repository"
+
+	"github.com/volatiletech/null/v9"
 )
 
 type UserRequest struct {
-	FirstName string `form:"first_name"`
-	LastName  string `form:"last_name"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Age       int64  `json:"age"`
+	Gender    int64  `json:"gender"`
 }
 
 type UserController interface {
 	FetchUserList(ur *UserRequest) (*[]model.User, error)
 	FindUser(id int64) (*model.User, error)
+	CreateUser(ur *UserRequest) (*model.User, error)
 	DeleteUser(id int64) error
 }
 
@@ -42,6 +47,22 @@ func (uc *userController) FindUser(id int64) (*model.User, error) {
 	}
 
 	return user, nil
+}
+
+func (uc *userController) CreateUser(ur *UserRequest) (*model.User, error) {
+	user := model.User{
+		FirstName: ur.FirstName,
+		LastName:  ur.LastName,
+		Gender:    null.Int64From(ur.Gender),
+		Age:       null.Int64From(ur.Age),
+	}
+
+	res, err := uc.UserRepository.Create(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
 }
 
 func (uc *userController) DeleteUser(id int64) error {
