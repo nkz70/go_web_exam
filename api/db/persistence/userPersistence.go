@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 
 	"webxam/domain/model"
@@ -37,6 +38,14 @@ func (up *userPersistence) Find(id int64) (*model.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (up *userPersistence) Create(user *model.User) (*model.User, error) {
+	if err := up.con.Select("FirstName", "LastName", "Age", "Gender").Create(user).Error; err != nil {
+		return nil, errors.WithMessage(err, "failed create user")
+	}
+
+	return user, nil
 }
 
 func (up *userPersistence) Delete(id int64) error {
