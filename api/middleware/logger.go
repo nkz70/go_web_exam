@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"go.uber.org/zap"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 
 	"webxam/config"
 )
@@ -15,6 +15,14 @@ func Logger(c *gin.Context) {
 
 	switch config.GetString("environment") {
 	case "development":
+		// level := zap.NewAtomicLevel()
+		// level.SetLevel(zapcore.DebugLevel)
+		// conf := zap.Config{
+		// 	Level:            level,
+		// 	Encoding:         "json",
+		// 	OutputPaths:      []string{"stdout", "./logs/hoge.log"},
+		// 	ErrorOutputPaths: []string{"stderr"},
+		// }
 		l, err = zap.NewDevelopment()
 		if err != nil {
 

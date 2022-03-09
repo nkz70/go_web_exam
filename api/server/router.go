@@ -25,6 +25,7 @@ func NewRouter() *gin.Engine {
 		v.GET("/users", un.FetchUserList)
 		v.GET("/user/:id", un.FindUser)
 		v.POST("/user", un.CreateUser)
+		v.PUT("/user/:id", un.UpdateUser)
 		v.DELETE("/user/:id", un.DeleteUser)
 	}
 

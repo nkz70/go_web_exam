@@ -18,6 +18,7 @@ type UserController interface {
 	FetchUserList(ur *UserRequest) (*[]model.User, error)
 	FindUser(id int64) (*model.User, error)
 	CreateUser(ur *UserRequest) (*model.User, error)
+	UpdateUser(id int64, ur *UserRequest) (*model.User, error)
 	DeleteUser(id int64) error
 }
 
@@ -58,6 +59,23 @@ func (uc *userController) CreateUser(ur *UserRequest) (*model.User, error) {
 	}
 
 	res, err := uc.UserRepository.Create(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (uc *userController) UpdateUser(id int64, ur *UserRequest) (*model.User, error) {
+	user := model.User{
+		ID:        id,
+		FirstName: ur.FirstName,
+		LastName:  ur.LastName,
+		Gender:    null.Int64From(ur.Gender),
+		Age:       null.Int64From(ur.Age),
+	}
+
+	res, err := uc.UserRepository.Update(&user)
 	if err != nil {
 		return nil, err
 	}
