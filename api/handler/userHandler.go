@@ -15,6 +15,7 @@ type UserHandler interface {
 	FetchUserList(c *gin.Context)
 	FindUser(c *gin.Context)
 	CreateUser(c *gin.Context)
+	UpdateUser(c *gin.Context)
 	DeleteUser(c *gin.Context)
 }
 
@@ -70,6 +71,27 @@ func (uh *userHandler) CreateUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, user)
+}
+
+func (uh *userHandler) UpdateUser(c *gin.Context) {
+	sid := c.Param("id")
+	id, err := strconv.ParseInt(sid, 10, 64)
+	if err != nil {
+
+	}
+
+	var ur controllers.UserRequest
+	if err := c.ShouldBindJSON(&ur); err != nil {
+		log.Println(err)
+	}
+	middleware.GetLogger().Infof(`request={"first_name": "%s", "last_name": "%s", "age": %d, "gender": %d}`, ur.FirstName, ur.LastName, ur.Age, ur.Gender)
+
+	user, err := uh.UserController.UpdateUser(id,&ur)
+	if err != nil {
+		middleware.GetLogger().Error(err)
+	}
+
+	c.JSON(http.StatusOK, user)
 }
 
 func (uh *userHandler) DeleteUser(c *gin.Context) {

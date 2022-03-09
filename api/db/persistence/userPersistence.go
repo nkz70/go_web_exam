@@ -48,6 +48,14 @@ func (up *userPersistence) Create(user *model.User) (*model.User, error) {
 	return user, nil
 }
 
+func (up *userPersistence) Update(user *model.User) (*model.User, error) {
+	if err := up.con.Save(user).Error; err != nil {
+		return nil, errors.WithMessage(err, "failed update user")
+	}
+
+	return user, nil
+}
+
 func (up *userPersistence) Delete(id int64) error {
 	var user model.User
 

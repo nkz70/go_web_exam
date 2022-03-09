@@ -1,5 +1,5 @@
 CREATE TABLE Users (
-    id bigint PRIMARY KEY,
+    id SERIAL NOT NULL,
     last_name varchar(100) NOT NULL,
     first_name varchar(100) NOT NULL,
     age smallint,
@@ -10,5 +10,6 @@ CREATE TABLE Users (
     test_datetime timestamp,
     created_at timestamp,
     updated_at timestamp,
-    deleted_at timestamp
+    deleted_at timestamp,
+    PRIMARY KEY (id)
 );
