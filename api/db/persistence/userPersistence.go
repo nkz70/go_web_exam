@@ -24,7 +24,7 @@ func (up *userPersistence) FetchList() (*[]model.User, error) {
 	// c := up.createDBClient(fc)
 
 	if err := c.Find(&users).Error; err != nil {
-		return nil, err
+		return nil, errors.WithMessage(err, "failed find user")
 	}
 
 	return &users, nil
@@ -34,7 +34,7 @@ func (up *userPersistence) Find(id int64) (*model.User, error) {
 	var user model.User
 
 	if err := up.con.First(&user, id).Error; err != nil {
-		return nil, err
+		return nil, errors.WithMessage(err, "failed find user")
 	}
 
 	return &user, nil
@@ -60,7 +60,7 @@ func (up *userPersistence) Delete(id int64) error {
 	var user model.User
 
 	if err := up.con.Delete(&user, id).Error; err != nil {
-		return err
+		return errors.WithMessage(err, "failed delete user")
 	}
 
 	return nil

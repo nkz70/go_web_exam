@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 
 	"webxam/controllers"
 	"webxam/middleware"
@@ -32,12 +32,12 @@ func NewUserHandler(uc controllers.UserController) UserHandler {
 func (uh *userHandler) FetchUserList(c *gin.Context) {
 	var ur controllers.UserRequest
 	if err := c.ShouldBindQuery(&ur); err != nil {
-		log.Println(err)
+		middleware.S.Error(err)
 	}
 
 	users, err := uh.UserController.FetchUserList(&ur)
 	if err != nil {
-
+		middleware.S.Error(err)
 	}
 
 	c.JSON(http.StatusOK, users)
@@ -47,12 +47,12 @@ func (uh *userHandler) FindUser(c *gin.Context) {
 	sid := c.Param("id")
 	id, err := strconv.ParseInt(sid, 10, 64)
 	if err != nil {
-
+		middleware.S.Error(err)
 	}
 
 	users, err := uh.UserController.FindUser(id)
 	if err != nil {
-
+		middleware.S.Error(err)
 	}
 
 	c.JSON(http.StatusOK, users)
@@ -61,13 +61,13 @@ func (uh *userHandler) FindUser(c *gin.Context) {
 func (uh *userHandler) CreateUser(c *gin.Context) {
 	var ur controllers.UserRequest
 	if err := c.ShouldBindJSON(&ur); err != nil {
-		log.Println(err)
+		middleware.S.Error(err)
 	}
-	middleware.GetLogger().Infof(`request={"first_name": "%s", "last_name": "%s", "age": %d, "gender": %d}`, ur.FirstName, ur.LastName, ur.Age, ur.Gender)
+	middleware.L.Info("create user", zap.Object("request", ur))
 
 	user, err := uh.UserController.CreateUser(&ur)
 	if err != nil {
-		middleware.GetLogger().Error(err)
+		middleware.S.Error(err)
 	}
 
 	c.JSON(http.StatusCreated, user)
@@ -77,18 +77,18 @@ func (uh *userHandler) UpdateUser(c *gin.Context) {
 	sid := c.Param("id")
 	id, err := strconv.ParseInt(sid, 10, 64)
 	if err != nil {
-
+		middleware.S.Error(err)
 	}
 
 	var ur controllers.UserRequest
 	if err := c.ShouldBindJSON(&ur); err != nil {
-		log.Println(err)
+		middleware.S.Error(err)
 	}
-	middleware.GetLogger().Infof(`request={"first_name": "%s", "last_name": "%s", "age": %d, "gender": %d}`, ur.FirstName, ur.LastName, ur.Age, ur.Gender)
+	middleware.L.Info("update user", zap.Object("request", ur))
 
-	user, err := uh.UserController.UpdateUser(id,&ur)
+	user, err := uh.UserController.UpdateUser(id, &ur)
 	if err != nil {
-		middleware.GetLogger().Error(err)
+		middleware.S.Error(err)
 	}
 
 	c.JSON(http.StatusOK, user)
@@ -98,11 +98,11 @@ func (uh *userHandler) DeleteUser(c *gin.Context) {
 	sid := c.Param("id")
 	id, err := strconv.ParseInt(sid, 10, 64)
 	if err != nil {
-
+		middleware.S.Error(err)
 	}
 
 	if err := uh.UserController.DeleteUser(id); err != nil {
-
+		middleware.S.Error(err)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
