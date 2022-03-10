@@ -5,6 +5,7 @@ import (
 	"webxam/domain/repository"
 
 	"github.com/volatiletech/null/v9"
+	"go.uber.org/zap/zapcore"
 )
 
 type UserRequest struct {
@@ -12,6 +13,14 @@ type UserRequest struct {
 	LastName  string `json:"last_name"`
 	Age       int64  `json:"age"`
 	Gender    int64  `json:"gender"`
+}
+
+func (ur UserRequest) MarshalLogObject(enc zapcore.ObjectEncoder) error {
+	enc.AddString("first_name", ur.FirstName)
+	enc.AddString("last_name", ur.LastName)
+	enc.AddInt64("age", ur.Age)
+	enc.AddInt64("gender", ur.Gender)
+	return nil
 }
 
 type UserController interface {
