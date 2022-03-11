@@ -23,3 +23,23 @@ INSERT INTO Users (
     current_timestamp,
     current_timestamp
 );
+
+INSERT INTO Questions (
+    id,
+    content,
+    image,
+    number,
+    short_name,
+    status,
+    created_at,
+    updated_at
+) VALUES (
+    1,
+    '世界一大きな川はどこでしょう？',
+    'neko.jpg',
+    1,
+    'big river',
+    1,
+    current_timestamp,
+    current_timestamp
+);
