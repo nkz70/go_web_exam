@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"webxam/config"
@@ -15,6 +16,20 @@ func NewRouter() *gin.Engine {
 	c := config.GetConfig()
 	router := gin.New()
 	router.Use(middleware.Logger)
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{
+			"http://localhost:3000",
+		},
+		AllowHeaders: []string{
+			"Content-Type",
+		},
+		AllowMethods: []string{
+			"GET",
+			"POST",
+			"DELETE",
+			"PUT",
+		},
+	}))
 
 	// user
 	ur := persistence.NewUserPersistence(db.GetDB())
