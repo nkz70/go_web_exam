@@ -1,22 +1,39 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, watchEffect } from 'vue';
 const props = defineProps({
-  status:{
+  status: {
     type: String,
     required: true,
-  }
+  },
+  user: {
+    type: Object,
+  },
 });
 
-const user = reactive({
-    "first_name": "",
-    "last_name": "",
-    "gender": null,
-    "age": null,
+let user = reactive({
+    first_name: "",
+    last_name: "",
+    gender: null,
+    age: null
 })
 
-const emit = defineEmits(['createUser']);
+watchEffect(() => {
+    user.first_name = props.user.first_name
+    user.last_name = props.user.last_name
+    user.gender = props.user.gender
+    user.age = props.user.age
+})
+
+
+const emit = defineEmits(['createUser', 'updateUser', 'deleteUser']);
 const sendCreateUser = () => {
     emit('createUser', user);
+};
+const sendUpdateUser = () => {
+    emit('updateUser', user);
+};
+const sendDeleteUser = () => {
+    emit('deleteUser')
 };
 </script>
 
@@ -43,10 +60,10 @@ const sendCreateUser = () => {
   </div>
 
   <template v-if="props.status === 'create'">
-      <input type="button" @click="sendCreateUser" value="登録">
+    <input type="button" @click="sendCreateUser" value="登録">
   </template>
   <template v-else>
-    <input type="submit" value="更新">
-    <input type="submit" value="削除">
+    <input type="submit" @click="sendUpdateUser" value="更新">
+    <input type="submit" @click="sendDeleteUser" value="削除">
   </template>
 </template>
