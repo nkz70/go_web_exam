@@ -1,30 +1,36 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ScoreView from "../views/ScoreView.vue";
-import UserCreateView from "../views/UserCreate.vue"
-import UserEditView from "../views/UserEdit.vue"
+import UserListView from "../views/UserListView.vue"
+import UserCreateView from "../views/UserCreateView.vue"
+import UserEditView from "../views/UserEditView.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
-      name: "home",
+      name: "Home",
       component: HomeView,
     },
     {
       path: "/user/:id/score",
-      name: "score",
+      name: "Score",
       component: ScoreView,
     },
     {
+      path: "/users",
+      name: "UserList",
+      component: UserListView,
+    },
+    {
       path: "/user",
-      name: "usercreate",
+      name: "UserCreate",
       component: UserCreateView,
     },
     {
       path: "/user/:id",
-      name: "userupdate",
+      name: "UserEdit",
       component: UserEditView,
     },
   ],
