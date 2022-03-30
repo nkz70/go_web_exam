@@ -41,7 +41,7 @@ func (qp *questionPersistence) Find(id int64) (*model.Question, error) {
 }
 
 func (qp *questionPersistence) Create(question *model.Question) (*model.Question, error) {
-	if err := qp.con.Select("Content", "Image", "Number", "ShortName", "Status").Create(question).Error; err != nil {
+	if err := qp.con.Create(question).Error; err != nil {
 		return nil, errors.WithMessage(err, "failed create question")
 	}
 

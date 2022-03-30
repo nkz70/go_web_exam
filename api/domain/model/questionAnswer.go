@@ -1,12 +1,19 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"github.com/volatiletech/null/v9"
+)
 
 type QuestionAnswer struct {
-	gorm.Model
-	FormType      string
+	ID            int64  `json:"id"`
+	FormType      string `json:"form_type"`
 	QuestionID    uint
-	Answer        string
-	LabelPosition uint
-	Label         string
+	Answer        string    `json:"answer"`
+	LabelPosition uint      `json:"label_position"`
+	Label         string    `json:"label"`
+	DeletedAt     null.Time `json:"deleted_at"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
 }
