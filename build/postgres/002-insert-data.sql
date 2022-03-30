@@ -1,4 +1,4 @@
-INSERT INTO Users (
+INSERT INTO users (
     id,
     last_name,
     first_name,
@@ -24,7 +24,7 @@ INSERT INTO Users (
     current_timestamp
 );
 
-INSERT INTO Questions (
+INSERT INTO questions (
     id,
     content,
     image,
@@ -40,6 +40,26 @@ INSERT INTO Questions (
     1,
     'big river',
     1,
+    current_timestamp,
+    current_timestamp
+);
+
+INSERT INTO question_answers (
+    id,
+    form_type,
+    question_id,
+    answer,
+    label_position,
+    label,
+    created_at,
+    updated_at
+) VALUES (
+    1,
+    '1',
+    1,
+    'ナイル川',
+    1,
+    '選択肢１',
     current_timestamp,
     current_timestamp
 );

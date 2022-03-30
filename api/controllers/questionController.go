@@ -8,11 +8,38 @@ import (
 )
 
 type QuestionRequest struct {
-	Content   string `json:"content"`
-	Image     string `json:"image"`
-	Number    int64  `json:"number"`
-	ShortName string `json:"short_name"`
-	Status    int64  `json:"status"`
+	Content         string          `json:"content"`
+	Image           string          `json:"image"`
+	Number          int64           `json:"number"`
+	ShortName       string          `json:"short_name"`
+	Status          int64           `json:"status"`
+	QuestionAnswers QuestionAnswers `json:"question_answers"`
+}
+
+type QuestionAnswers []QuestionAnswer
+
+func (qas QuestionAnswers) MarshalLogArray(enc zapcore.ArrayEncoder) error {
+	for _, qa := range qas {
+		if err := enc.AppendObject(qa); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+type QuestionAnswer struct {
+	FormType      string `json:"form_type"`
+	Answer        string `json:"answer"`
+	LabelPosition uint   `json:"label_position"`
+	Label         string `json:"label`
+}
+
+func (qa QuestionAnswer) MarshalLogObject(enc zapcore.ObjectEncoder) error {
+	enc.AddString("form_type", qa.FormType)
+	enc.AddString("answer", qa.Answer)
+	enc.AddUint("label_position", qa.LabelPosition)
+	return nil
 }
 
 func (qr QuestionRequest) MarshalLogObject(enc zapcore.ObjectEncoder) error {
@@ -21,6 +48,7 @@ func (qr QuestionRequest) MarshalLogObject(enc zapcore.ObjectEncoder) error {
 	enc.AddInt64("number", qr.Number)
 	enc.AddString("short_name", qr.ShortName)
 	enc.AddInt64("status", qr.Status)
+	enc.AddArray("question_answers", qr.QuestionAnswers)
 	return nil
 }
 
@@ -61,12 +89,23 @@ func (qc *questionController) FindQuestion(id int64) (*model.Question, error) {
 }
 
 func (qc *questionController) CreateQuestion(qr *QuestionRequest) (*model.Question, error) {
+	qs := make([]model.QuestionAnswer, len(qr.QuestionAnswers))
+	for i, v := range qr.QuestionAnswers {
+		qs[i] = model.QuestionAnswer{
+			FormType:      v.FormType,
+			Answer:        v.Answer,
+			LabelPosition: v.LabelPosition,
+			Label:         v.Label,
+		}
+	}
+
 	question := model.Question{
-		Content:   qr.Content,
-		Image:     qr.Image,
-		Number:    qr.Number,
-		ShortName: qr.ShortName,
-		Status:    qr.Status,
+		Content:         qr.Content,
+		Image:           qr.Image,
+		Number:          qr.Number,
+		ShortName:       qr.ShortName,
+		Status:          qr.Status,
+		QuestionAnswers: qs,
 	}
 
 	res, err := qc.QuestionRepository.Create(&question)
