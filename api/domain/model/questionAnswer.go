@@ -7,8 +7,8 @@ import (
 )
 
 type QuestionAnswer struct {
-	ID            int64  `json:"id"`
-	FormType      string `json:"form_type"`
+	ID            int64 `json:"id"`
+	FormType      uint  `json:"form_type"`
 	QuestionID    uint
 	Answer        string    `json:"answer"`
 	LabelPosition uint      `json:"label_position"`
