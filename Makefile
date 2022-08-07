@@ -12,3 +12,5 @@ rebuild:
 	docker-compose build --no-cache
 logs:
 	docker-compose logs ${name}
+genmock:
+	genmock -source=${source} destination=${mock} -package=${pkg}

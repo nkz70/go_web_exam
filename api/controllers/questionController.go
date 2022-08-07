@@ -29,14 +29,14 @@ func (qas QuestionAnswers) MarshalLogArray(enc zapcore.ArrayEncoder) error {
 }
 
 type QuestionAnswer struct {
-	FormType      string `json:"form_type"`
+	FormType      uint   `json:"form_type"`
 	Answer        string `json:"answer"`
 	LabelPosition uint   `json:"label_position"`
 	Label         string `json:"label`
 }
 
 func (qa QuestionAnswer) MarshalLogObject(enc zapcore.ObjectEncoder) error {
-	enc.AddString("form_type", qa.FormType)
+	enc.AddUint("form_type", qa.FormType)
 	enc.AddString("answer", qa.Answer)
 	enc.AddUint("label_position", qa.LabelPosition)
 	return nil
