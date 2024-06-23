@@ -76,15 +76,13 @@ func (uc *userController) CreateUser(ur *UserRequest) (*model.User, error) {
 }
 
 func (uc *userController) UpdateUser(id int64, ur *UserRequest) (*model.User, error) {
-	user := model.User{
-		ID:        id,
-		FirstName: ur.FirstName,
-		LastName:  ur.LastName,
-		Gender:    null.Int64From(ur.Gender),
-		Age:       null.Int64From(ur.Age),
+	user, err := uc.UserRepository.Find(id)
+	if err != nil {
+		return nil, err
 	}
 
-	res, err := uc.UserRepository.Update(&user)
+	updateUser := createUpdateUser(user, ur)
+	res, err := uc.UserRepository.Update(updateUser)
 	if err != nil {
 		return nil, err
 	}
@@ -100,6 +98,10 @@ func (uc *userController) DeleteUser(id int64) error {
 	return nil
 }
 
-// func validate(ur UserRequest) {
-
-// }
+func createUpdateUser(user *model.User, ur *UserRequest) *model.User {
+	user.FirstName = ur.FirstName
+	user.LastName = ur.LastName
+	user.Gender = null.Int64From(ur.Gender)
+	user.Age = null.Int64From(ur.Age)
+	return user
+}
