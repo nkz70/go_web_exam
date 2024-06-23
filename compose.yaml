@@ -1,0 +1,45 @@
+services:
+  front:
+    container_name: web_exam_front
+    build:
+      context: .
+      dockerfile: ./build/Dockerfile.front
+    ports:
+      - 3000:3000
+    tty: true
+    volumes:
+      - ./front:/front
+    # command: >
+    #   sh -c "cd /front && npm run dev"
+  api:
+    container_name: web_exam_api
+    build:
+      context: .
+      dockerfile: ./build/Dockerfile.api
+    environment:
+      - DB_USER_NAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=web_exam
+      - TZ=Asia/Tokyo
+    ports:
+      - 8080:80
+    volumes:
+      - ./api:/go/src
+  db:
+    container_name: web_exam_db
+    image: postgres:14.2-alpine
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_UESR=postgres
+      - POSTGRES_DB=web_exam
+    ports:
+      - 55432:5432
+    volumes:
+      - ./build/postgres:/docker-entrypoint-initdb.d
+  mail:
+    container_name: web_exam_mail
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - 1025:1025
+      - 8025:8025

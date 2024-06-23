@@ -20,6 +20,7 @@ CREATE TABLE questions (
     image varchar(100) NOT NULL,
     number smallint NOT NULL,
     short_name varchar(100) NOT NULL,
+    form_type smallint NOT NULL,
     status smallint DEFAULT 0,
     created_at timestamp,
     updated_at timestamp,
@@ -29,7 +30,6 @@ CREATE TABLE questions (
 
 CREATE TABLE question_answers (
     id SERIAL NOT NULL,
-    form_type smallint NOT NULL,
     question_id bigint NOT NULL,
     answer varchar(100) NOT NULL,
     label_position smallint,

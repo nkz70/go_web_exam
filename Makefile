@@ -5,7 +5,6 @@ up:
 down:
 	docker-compose down
 reboot: down up
-
 exec:
 	docker-compose exec ${name} sh
 rebuild:
