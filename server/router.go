@@ -31,13 +31,15 @@ func NewRouter() *gin.Engine {
 		},
 	}))
 
+	db := db.GetDB()
+
 	// user
-	ur := persistence.NewUserPersistence(db.GetDB())
+	ur := persistence.NewUserPersistence(db)
 	uc := controllers.NewUserController(ur)
 	un := handler.NewUserHandler(uc)
 
 	// question
-	qr := persistence.NewQuestionPersistence(db.GetDB())
+	qr := persistence.NewQuestionPersistence(db)
 	qc := controllers.NewQuestionController(qr)
 	qn := handler.NewQuestionHandler(qc)
 
