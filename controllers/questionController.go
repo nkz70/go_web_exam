@@ -117,15 +117,13 @@ func (qc *questionController) CreateQuestion(qr *QuestionRequest) (*model.Questi
 }
 
 func (qc *questionController) UpdateQuestion(id int64, qr *QuestionRequest) (*model.Question, error) {
-	question := model.Question{
-		Content:   qr.Content,
-		Image:     qr.Image,
-		Number:    qr.Number,
-		ShortName: qr.ShortName,
-		Status:    qr.Status,
+	question, err := qc.QuestionRepository.Find(id)
+	if err != nil {
+		return nil, err
 	}
 
-	res, err := qc.QuestionRepository.Update(&question)
+	updateQuestion := createUpdateQuestion(question, qr)
+	res, err := qc.QuestionRepository.Update(updateQuestion)
 	if err != nil {
 		return nil, err
 	}
@@ -141,6 +139,11 @@ func (qc *questionController) DeleteQuestion(id int64) error {
 	return nil
 }
 
-// func validate(ur UserRequest) {
-
-// }
+func createUpdateQuestion(question *model.Question, qr *QuestionRequest) *model.Question {
+	question.Content = qr.Content
+	question.Image = qr.Image
+	question.Number = qr.Number
+	question.ShortName = qr.ShortName
+	question.Status = qr.Status
+	return question
+}
