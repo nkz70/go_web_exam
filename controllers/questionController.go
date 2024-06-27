@@ -17,6 +17,17 @@ type QuestionRequest struct {
 	QuestionAnswers QuestionAnswers `json:"question_answers"`
 }
 
+func (qr QuestionRequest) MarshalLogObject(enc zapcore.ObjectEncoder) error {
+	enc.AddString("content", qr.Content)
+	enc.AddString("image", qr.Image)
+	enc.AddInt64("number", qr.Number)
+	enc.AddString("short_name", qr.ShortName)
+	enc.AddUint("form_type", qr.FormType)
+	enc.AddInt64("status", qr.Status)
+	enc.AddArray("question_answers", qr.QuestionAnswers)
+	return nil
+}
+
 type QuestionAnswers []QuestionAnswer
 
 func (qas QuestionAnswers) MarshalLogArray(enc zapcore.ArrayEncoder) error {
@@ -38,17 +49,6 @@ type QuestionAnswer struct {
 func (qa QuestionAnswer) MarshalLogObject(enc zapcore.ObjectEncoder) error {
 	enc.AddString("answer", qa.Answer)
 	enc.AddUint("label_position", qa.LabelPosition)
-	return nil
-}
-
-func (qr QuestionRequest) MarshalLogObject(enc zapcore.ObjectEncoder) error {
-	enc.AddString("content", qr.Content)
-	enc.AddString("image", qr.Image)
-	enc.AddInt64("number", qr.Number)
-	enc.AddString("short_name", qr.ShortName)
-	enc.AddUint("form_type", qr.FormType)
-	enc.AddInt64("status", qr.Status)
-	enc.AddArray("question_answers", qr.QuestionAnswers)
 	return nil
 }
 

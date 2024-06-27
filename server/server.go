@@ -12,5 +12,4 @@ func Init() {
 
 	log.Println("starting application ...")
 	r.Run(c.GetString("server.port"))
-
 }
