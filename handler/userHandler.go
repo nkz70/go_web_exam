@@ -36,6 +36,7 @@ func (uh *userHandler) FetchUserList(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
+		return
 	}
 
 	users, err := uh.UserController.FetchUserList(&ur)
@@ -44,6 +45,7 @@ func (uh *userHandler) FetchUserList(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, users)
@@ -54,11 +56,15 @@ func (uh *userHandler) FindUser(c *gin.Context) {
 	id, err := strconv.ParseInt(sid, 10, 64)
 	if err != nil {
 		middleware.S.Error(err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 
 	users, err := uh.UserController.FindUser(id)
 	if err != nil {
 		middleware.S.Error(err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusOK, users)
@@ -68,12 +74,16 @@ func (uh *userHandler) CreateUser(c *gin.Context) {
 	var ur controllers.UserRequest
 	if err := c.ShouldBindJSON(&ur); err != nil {
 		middleware.S.Error(err)
+		c.JSON(http.StatusBadRequest, err)
+		return
 	}
 	middleware.L.Info("create user", zap.Object("request", ur))
 
 	user, err := uh.UserController.CreateUser(&ur)
 	if err != nil {
 		middleware.S.Error(err)
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	c.JSON(http.StatusCreated, user)
@@ -84,17 +94,23 @@ func (uh *userHandler) UpdateUser(c *gin.Context) {
 	id, err := strconv.ParseInt(sid, 10, 64)
 	if err != nil {
 		middleware.S.Error(err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 
 	var ur controllers.UserRequest
 	if err := c.ShouldBindJSON(&ur); err != nil {
 		middleware.S.Error(err)
+		c.JSON(http.StatusBadRequest, err)
+		return
 	}
 	middleware.L.Info("update user", zap.Object("request", ur))
 
 	user, err := uh.UserController.UpdateUser(id, &ur)
 	if err != nil {
 		middleware.S.Error(err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusOK, user)
@@ -105,10 +121,14 @@ func (uh *userHandler) DeleteUser(c *gin.Context) {
 	id, err := strconv.ParseInt(sid, 10, 64)
 	if err != nil {
 		middleware.S.Error(err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 
 	if err := uh.UserController.DeleteUser(id); err != nil {
 		middleware.S.Error(err)
+		c.JSON(http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
