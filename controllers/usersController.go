@@ -6,6 +6,7 @@ import (
 
 	"webexam/domain/model"
 	"webexam/domain/repository"
+	"webexam/validator"
 )
 
 type UserRequest struct {
@@ -33,11 +34,13 @@ type UserController interface {
 
 type userController struct {
 	UserRepository repository.UserRepository
+	UserValidator  validator.UserValidator
 }
 
-func NewUserController(ur repository.UserRepository) UserController {
+func NewUserController(ur repository.UserRepository, uv validator.UserValidator) UserController {
 	return &userController{
 		UserRepository: ur,
+		UserValidator:  uv,
 	}
 }
 
@@ -65,6 +68,9 @@ func (uc *userController) CreateUser(ur *UserRequest) (*model.User, error) {
 		LastName:  ur.LastName,
 		Gender:    null.Int64From(ur.Gender),
 		Age:       null.Int64From(ur.Age),
+	}
+	if err := uc.UserValidator.Validate(&user); err != nil {
+		return nil, err
 	}
 
 	res, err := uc.UserRepository.Create(&user)

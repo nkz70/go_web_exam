@@ -10,6 +10,7 @@ import (
 	"webexam/db/persistence"
 	"webexam/handler"
 	"webexam/middleware"
+	"webexam/validator"
 )
 
 func NewRouter() *gin.Engine {
@@ -35,7 +36,8 @@ func NewRouter() *gin.Engine {
 
 	// user
 	ur := persistence.NewUserPersistence(db)
-	uc := controllers.NewUserController(ur)
+	uv := validator.NewUserValidator()
+	uc := controllers.NewUserController(ur, uv)
 	un := handler.NewUserHandler(uc)
 
 	// question

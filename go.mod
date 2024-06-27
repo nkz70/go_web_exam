@@ -5,6 +5,7 @@ go 1.22.3
 require (
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
+	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.19.0
 	github.com/volatiletech/null/v9 v9.0.0
@@ -14,6 +15,7 @@ require (
 )
 
 require (
+	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
