@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 
 	"webxam/domain/model"
@@ -23,7 +24,7 @@ func (up *userPersistence) FetchList() (*[]model.User, error) {
 	// c := up.createDBClient(fc)
 
 	if err := c.Find(&users).Error; err != nil {
-		return nil, err
+		return nil, errors.WithMessage(err, "failed find user")
 	}
 
 	return &users, nil
@@ -33,17 +34,33 @@ func (up *userPersistence) Find(id int64) (*model.User, error) {
 	var user model.User
 
 	if err := up.con.First(&user, id).Error; err != nil {
-		return nil, err
+		return nil, errors.WithMessage(err, "failed find user")
 	}
 
 	return &user, nil
+}
+
+func (up *userPersistence) Create(user *model.User) (*model.User, error) {
+	if err := up.con.Select("FirstName", "LastName", "Age", "Gender").Create(user).Error; err != nil {
+		return nil, errors.WithMessage(err, "failed create user")
+	}
+
+	return user, nil
+}
+
+func (up *userPersistence) Update(user *model.User) (*model.User, error) {
+	if err := up.con.Save(user).Error; err != nil {
+		return nil, errors.WithMessage(err, "failed update user")
+	}
+
+	return user, nil
 }
 
 func (up *userPersistence) Delete(id int64) error {
 	var user model.User
 
 	if err := up.con.Delete(&user, id).Error; err != nil {
-		return err
+		return errors.WithMessage(err, "failed delete user")
 	}
 
 	return nil

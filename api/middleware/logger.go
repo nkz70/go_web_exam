@@ -1,13 +1,17 @@
 package middleware
 
 import (
-	"go.uber.org/zap"
+	"log"
+
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 
 	"webxam/config"
 )
 
-var l *zap.Logger
+var L *zap.Logger
+var S *zap.SugaredLogger
 
 func Logger(c *gin.Context) {
 	var err error
@@ -15,15 +19,31 @@ func Logger(c *gin.Context) {
 
 	switch config.GetString("environment") {
 	case "development":
-		l, err = zap.NewDevelopment()
-		if err != nil {
-
+		level := zap.NewAtomicLevel()
+		level.SetLevel(zapcore.DebugLevel)
+		conf := zap.Config{
+			Level:    level,
+			Encoding: "console",
+			EncoderConfig: zapcore.EncoderConfig{
+				TimeKey:        "Time",
+				LevelKey:       "Level",
+				NameKey:        "Name",
+				CallerKey:      "Caller",
+				MessageKey:     "Msg",
+				StacktraceKey:  "St",
+				EncodeLevel:    zapcore.CapitalLevelEncoder,
+				EncodeTime:     zapcore.ISO8601TimeEncoder,
+				EncodeDuration: zapcore.StringDurationEncoder,
+				EncodeCaller:   zapcore.ShortCallerEncoder,
+			},
+			OutputPaths:      []string{"stdout", "./logs/hoge.log"},
+			ErrorOutputPaths: []string{"stderr"},
 		}
+		L, err = conf.Build()
+		if err != nil {
+			log.Fatal(err)
+		}
+		S = L.Sugar()
 	case "production":
-
 	}
-}
-
-func GetLogger() *zap.SugaredLogger {
-	return l.Sugar()
 }
